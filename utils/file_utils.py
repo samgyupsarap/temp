@@ -1,3 +1,4 @@
+import shutil
 import os
 
 def create_folder_if_not_exists(parent_folder, folder_name):
@@ -48,5 +49,24 @@ def save_data_to_file(folder_path, batch_no, api_data, original_folder_path):
     except Exception as e:
         print(f"Error saving batch path to file: {e}")
 
+def copy_from_copyfolder(batch_folder_path):
+    """Copy files and folders from CopyFolder to the batch folder."""
+    copy_folder = os.path.join(os.path.dirname(__file__), '..', 'CopyFolder')
+    
+    if not os.path.exists(copy_folder):
+        print(f"CopyFolder does not exist at {copy_folder}")
+        return
+    
+    for item in os.listdir(copy_folder):
+        s = os.path.join(copy_folder, item)
+        d = os.path.join(batch_folder_path, item)
 
+        if os.path.isdir(s):
+            # Copy directory
+            shutil.copytree(s, d, dirs_exist_ok=True)
+        else:
+            # Copy file
+            shutil.copy2(s, d)
+
+    print(f"Copied files and folders from CopyFolder to {batch_folder_path}")
 

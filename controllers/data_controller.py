@@ -1,6 +1,6 @@
 import requests
 from tkinter import messagebox
-from utils.file_utils import save_data_to_file, create_folder_if_not_exists
+from utils.file_utils import save_data_to_file, create_folder_if_not_exists, copy_from_copyfolder
 from models.api_model import API_URL
 from models.token_model import TokenStorage
 
@@ -45,5 +45,8 @@ def process_batches(folder_path, caseid_pattern, num_batches):
 
         # Save API data to text file
         save_data_to_file(batch_folder_path, batch_no, api_data, original_folder_path)
+
+        # Copy files and folders from CopyFolder to the batch folder
+        copy_from_copyfolder(batch_folder_path)
 
         batch_no += 1
