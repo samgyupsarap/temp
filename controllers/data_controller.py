@@ -35,18 +35,15 @@ def process_batches(folder_path, caseid_pattern):
     while True:
         api_data = fetch_data(caseid_pattern, batch_no)
 
-        # Debugging: Print the fetched API data to verify the structure
-        print(f"Batch {batch_no} data: {api_data}")
-
         if not api_data or not api_data.get('results'):
             # No more data available or API response is invalid
             break
 
         # Create the Batch folder inside the CaseID folder
         subfolder_name = f"Batch_{batch_no}"
-        batch_folder_path = create_folder_if_not_exists(folder_path, subfolder_name)
+        batch_folder_path, original_folder_path = create_folder_if_not_exists(folder_path, subfolder_name)
 
         # Save API data to text file
-        save_data_to_file(batch_folder_path, batch_no, api_data)
+        save_data_to_file(batch_folder_path, batch_no, api_data, original_folder_path)
 
         batch_no += 1
