@@ -9,7 +9,7 @@ def create_folder_if_not_exists(parent_folder, folder_name):
     # Check if the folder exists and adjust the path if necessary
     count = 1
     while os.path.exists(batch_folder_path):
-        batch_folder_path = os.path.join(parent_folder, f"{folder_name} (new{count})")
+        batch_folder_path = os.path.join(parent_folder, f"{folder_name} ({count})")
         count += 1
 
     os.makedirs(batch_folder_path, exist_ok=True)
@@ -17,8 +17,8 @@ def create_folder_if_not_exists(parent_folder, folder_name):
 
 
 def save_data_to_file(folder_path, caseid_pattern, batch_no, api_data, original_folder_path):
-    """Save only the 'caseid' from the API data to a text file named caseid_batch_no.txt."""
-    txt_file_name = f"{caseid_pattern}_{batch_no}.txt"
+    """Save only the 'caseid' from the API data to a text file named caseid_pattern_Batch_{batch_no}.txt."""
+    txt_file_name = f"{caseid_pattern}_Batch_{batch_no}.txt"  # Updated file name format
     txt_file_path = os.path.join(folder_path, txt_file_name)
 
     try:
@@ -40,12 +40,12 @@ def save_data_to_file(folder_path, caseid_pattern, batch_no, api_data, original_
     except Exception as e:
         print(f"Error saving case IDs to file: {e}")
 
-    # Create a text file to store the full path of the batch folder without (new) suffix
+    # Create a text file to store the full path of the batch folder with the complete path of the text file
     path_file_path = os.path.join(folder_path, "batch_path.txt")
     try:
-        # Write the original folder path to the path_file_path
+        # Write the full path of the text file to the path_file_path
         with open(path_file_path, "w") as path_file:
-            path_file.write(f"{os.path.abspath(original_folder_path)}")
+            path_file.write(f"{os.path.abspath(txt_file_path)}")
         print(f"Path successfully saved in {path_file_path}")
     except Exception as e:
         print(f"Error saving batch path to file: {e}")

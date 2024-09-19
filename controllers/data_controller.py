@@ -40,7 +40,7 @@ def process_batches(folder_path, caseid_pattern, num_batches):
             break
 
         # Create the Batch folder inside the CaseID folder
-        subfolder_name = f"Batch_{batch_no}"
+        subfolder_name = f"{caseid_pattern}_Batch_{batch_no}"
         batch_folder_path, original_folder_path = create_folder_if_not_exists(folder_path, subfolder_name)
 
         # Save API data to text file
