@@ -8,7 +8,7 @@ class LoginView:
         self.root = root
         self.on_login_success = on_login_success
         self.root.title("Login")
-        self.root.geometry("300x150")
+        self.root.geometry("300x300")
 
         tk.Label(self.root, text="Username").pack(pady=5)
         self.username_entry = tk.Entry(self.root)

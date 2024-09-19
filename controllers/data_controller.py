@@ -30,9 +30,9 @@ def fetch_data(caseid_pattern, batchno):
         messagebox.showerror("API Error", f"Failed to fetch data: {e}")
         return None
 
-def process_batches(folder_path, caseid_pattern):
+def process_batches(folder_path, caseid_pattern, num_batches):
     batch_no = 1
-    while True:
+    while batch_no <= num_batches:
         api_data = fetch_data(caseid_pattern, batch_no)
 
         if not api_data or not api_data.get('results'):

@@ -6,7 +6,7 @@ from views.login_view import LoginView
 
 def main():
     root = tk.Tk()
-    root.geometry("300x150")
+    root.geometry("300x300")
 
     def on_login_success(username, password):
         login_controller.handle_login(username, password)
