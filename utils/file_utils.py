@@ -14,9 +14,12 @@ def save_data_to_file(folder_path, batch_no, api_data):
     txt_file_path = os.path.join(folder_path, f"Batch_{batch_no}.txt")
 
     try:
+        # Extract 'results' from API data
+        results = api_data.get('results', [])
+
         # Open the file and write the caseids
         with open(txt_file_path, "w") as file:
-            for item in api_data:
+            for item in results:
                 # Ensure that item is a dictionary and contains 'caseid'
                 if isinstance(item, dict) and 'caseid' in item:
                     # Debugging: Verify each caseid
@@ -25,7 +28,7 @@ def save_data_to_file(folder_path, batch_no, api_data):
                     file.write(f"{item['caseid']}\n")
                 else:
                     # Log or handle unexpected data
-                    print(f"Unexpected item format: {item}")
+                    print(f"Unexpected item format in results: {item}")
 
         print(f"Case IDs successfully saved in {txt_file_path}")
     except Exception as e:
@@ -40,3 +43,4 @@ def save_data_to_file(folder_path, batch_no, api_data):
         print(f"Path successfully saved in {path_file_path}")
     except Exception as e:
         print(f"Error saving batch path to file: {e}")
+
