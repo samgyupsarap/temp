@@ -23,7 +23,7 @@ def save_data_to_file(folder_path, batch_no, api_data):
                 # Ensure that item is a dictionary and contains 'caseid'
                 if isinstance(item, dict) and 'caseid' in item:
                     # Debugging: Verify each caseid
-                    print(f"Saving caseid: {item['caseid']}")
+
                     # Write only the caseid to the file
                     file.write(f"{item['caseid']}\n")
                 else:
@@ -37,9 +37,8 @@ def save_data_to_file(folder_path, batch_no, api_data):
     # Create a text file to store the full path of the batch folder
     path_file_path = os.path.join(folder_path, "batch_path.txt")
     try:
-        with open(path_file_path, "w") as path_file:
-            path_file.write(f"Batch {batch_no} data saved in: {txt_file_path}\n")
-            path_file.write(f"Folder path: {folder_path}")
+        with open(path_file_path, "w") as path_file:    
+            path_file.write(f"{folder_path}")
         print(f"Path successfully saved in {path_file_path}")
     except Exception as e:
         print(f"Error saving batch path to file: {e}")

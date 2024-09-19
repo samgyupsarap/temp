@@ -11,7 +11,7 @@ class LoginController:
     def handle_login(self, username, password):
         try:
             token = login(username, password)
-            print(f"Login successful. Token: {token}")  # Print the token to the terminal
+            print(f"Login successful.")  # Print the token to the terminal
 
             # Save the token to TokenStorage
             TokenStorage.set_token(token)
