@@ -29,7 +29,7 @@ def fetch_data(caseid_pattern, batchno):
     except requests.RequestException as e:
         messagebox.showerror("API Error", f"Failed to fetch data: {e}")
         return None
-
+    
 def process_batches(folder_path, caseid_pattern, num_batches):
     batch_no = 1
     while batch_no <= num_batches:
@@ -44,7 +44,7 @@ def process_batches(folder_path, caseid_pattern, num_batches):
         batch_folder_path, original_folder_path = create_folder_if_not_exists(folder_path, subfolder_name)
 
         # Save API data to text file
-        save_data_to_file(batch_folder_path, batch_no, api_data, original_folder_path)
+        save_data_to_file(batch_folder_path, caseid_pattern, batch_no, api_data, original_folder_path)
 
         # Copy files and folders from CopyFolder to the batch folder
         copy_from_copyfolder(batch_folder_path)

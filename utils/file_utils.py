@@ -16,9 +16,10 @@ def create_folder_if_not_exists(parent_folder, folder_name):
     return batch_folder_path, original_folder_path
 
 
-def save_data_to_file(folder_path, batch_no, api_data, original_folder_path):
-    """Save only the 'caseid' from the API data to a text file."""
-    txt_file_path = os.path.join(folder_path, f"Batch_{batch_no}.txt")
+def save_data_to_file(folder_path, caseid_pattern, batch_no, api_data, original_folder_path):
+    """Save only the 'caseid' from the API data to a text file named caseid_batch_no.txt."""
+    txt_file_name = f"{caseid_pattern}_{batch_no}.txt"
+    txt_file_path = os.path.join(folder_path, txt_file_name)
 
     try:
         # Extract 'results' from API data
@@ -48,6 +49,7 @@ def save_data_to_file(folder_path, batch_no, api_data, original_folder_path):
         print(f"Path successfully saved in {path_file_path}")
     except Exception as e:
         print(f"Error saving batch path to file: {e}")
+
 
 def copy_from_copyfolder(batch_folder_path):
     """Copy files and folders from CopyFolder to the batch folder."""
