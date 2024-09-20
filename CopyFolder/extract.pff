@@ -1,0 +1,16 @@
+﻿[Run Information]
+Version=CSPro 7.7
+AppType=Entry
+
+[Files]
+Application=.\extract.ent
+InputData=|type=None
+
+[ExternalFiles]
+CBMS2024_DICT=|type=None
+
+[UserFiles]
+
+[Parameters]
+CSWEB_URL=https://popcen-dev.psa.gov.ph/sr/api/
+INPUT_FILE=E:\popceb\extractor\input\01.txt
