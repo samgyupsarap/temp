@@ -1,36 +1,69 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
+from PIL import Image, ImageTk
 from controllers.data_controller import process_batches
 
 class MainView:
     def __init__(self, root):
         self.root = root
         self.root.title("Finding CaseID")
-        self.root.geometry("500x250")  # Increase the height to accommodate new fields
+        self.root.geometry("500x350")
+        self.root.resizable(False, False)
 
-        # Create a label for CaseID
-        self.label = tk.Label(root, text="Enter CaseID:")
-        self.label.pack(pady=10)
+        # Load and set the background image
+        self.bg_image = Image.open("./src/bg_py_app.png")  # Path to your background image
+        self.bg_image = self.bg_image.resize((500, 350), Image.LANCZOS)  # Resize image to fit the window
+        self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
 
-        # Create an entry widget for CaseID input
-        self.entry = tk.Entry(root)
-        self.entry.pack(pady=5)
+        # Create a canvas to hold the background image and widgets
+        self.canvas = tk.Canvas(self.root, width=500, height=350, highlightthickness=0)
+        self.canvas.pack(fill='both', expand=True)
+        self.canvas.create_image(0, 0, anchor='nw', image=self.bg_image_tk)
 
-        # Create a label for Number of Batches
-        self.batches_label = tk.Label(root, text="Number of Batches:")
-        self.batches_label.pack(pady=10)
+        # Consistent width for entry fields and buttons
+        self.entry_width = 20
 
-        # Create an entry widget for Number of Batches input
-        self.batches_entry = tk.Entry(root)
-        self.batches_entry.pack(pady=5)
+        # Create a label for CaseID (centered)
+        self.canvas.create_text(250, 80, text="Enter CaseID", font=("Poppins", 12), fill="black")
 
-        # Create a submit button
-        self.submit_button = tk.Button(root, text="Submit", command=self.submit)
-        self.submit_button.pack(pady=10)
+        # Create an entry widget for CaseID input with a border
+        self.caseid_entry = tk.Entry(
+            self.canvas, font=("Poppins", 12), bg='white', width=self.entry_width,
+            highlightthickness=2,  # Thickness of the border
+            highlightbackground='black',  # Border color when unfocused
+            highlightcolor='#0073c2'
+        )
+        self.canvas.create_window(250, 110, window=self.caseid_entry)
+
+        # Create a label for Number of Batches (centered)
+        self.canvas.create_text(250, 150, text="Number of Batches", font=("Poppins", 12), fill="black")
+
+        # Create an entry widget for Number of Batches input with a border
+        self.batches_entry = tk.Entry(
+            self.canvas, font=("Poppins", 12), bg='white', width=self.entry_width,
+            highlightthickness=2,  # Thickness of the border
+            highlightbackground='black',  # Border color when unfocused
+            highlightcolor='#0073c2'  # Border color when focused
+        )
+        self.canvas.create_window(250, 180, window=self.batches_entry)
+
+        self.submit_button = tk.Button(
+            self.canvas,
+            text="Submit",
+            command=self.submit,
+            font=("Poppins", 12),
+            bg='#0073c2',  # Custom background color (e.g., green)
+            fg='white',  # Text color
+            activebackground='#448ec2',  # Background color when the button is pressed
+            activeforeground='white',  # Text color when the button is pressed
+            width=self.entry_width,  # Button width to match the input fields
+            borderwidth=0  # Remove the border
+        )
+        self.canvas.create_window(250, 240, window=self.submit_button)
 
     def submit(self):
-        user_input = self.entry.get()
+        user_input = self.caseid_entry.get()
         num_batches_input = self.batches_entry.get()
 
         if user_input.isdigit() and num_batches_input.isdigit():
