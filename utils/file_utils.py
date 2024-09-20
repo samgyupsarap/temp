@@ -59,6 +59,11 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
 
+    # Auto-open extract.pen
+    pen_file_path = os.path.join(batch_folder_path, "extract.pen")
+    if os.path.exists(pen_file_path):
+        open_pen_file(pen_file_path)
+
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
     """Update extractData.pff to include the complete path for INPUT_FILE."""
     txt_file_name = f"{caseid_pattern}_Batch_{batch_no}.txt"
@@ -77,3 +82,11 @@ def update_extract_data(pff_file_path, caseid_pattern, batch_no):
 
     except Exception as e:
         print(f"Error updating extractData.pff: {e}")
+
+def open_pen_file(pen_file_path):
+    """Open the extract.pen file with the default associated application."""
+    try:
+        os.startfile(pen_file_path)  # Open with the default associated application
+        print(f"{pen_file_path} opened successfully.")
+    except Exception as e:
+        print(f"Error opening {pen_file_path}: {e}")
