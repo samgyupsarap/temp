@@ -13,4 +13,4 @@ CBMS2024_DICT=|type=None
 
 [Parameters]
 CSWEB_URL=https://popcen-dev.psa.gov.ph/sr/api/
-INPUT_FILE=E:\popceb\extractor\input\01.txt
+INPUT_FILE=
