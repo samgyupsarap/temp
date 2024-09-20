@@ -49,4 +49,8 @@ class LoginView:
         if username and password:
             self.on_login_success(username, password)
         else:
+<<<<<<< HEAD
             messagebox.showwarning("Input Error", "Please enter both username and password.") 
+=======
+            messagebox.showwarning("Input Error", "Please enter both username and password.")
+>>>>>>> 849a221e00f9b618e18395dbce093745c07041f1
