@@ -15,7 +15,7 @@ def main():
     login_view = LoginView(root, on_login_success)
 
     root.mainloop()
-
+    root.deiconify()
 
 if __name__ == "__main__":
     main()

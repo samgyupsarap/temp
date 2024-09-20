@@ -1,36 +1,60 @@
-import tkinter as tk
+import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import os
+from PIL import Image, ImageTk
 from controllers.data_controller import process_batches
 
 class MainView:
     def __init__(self, root):
         self.root = root
         self.root.title("Finding CaseID")
-        self.root.geometry("500x250")  # Increase the height to accommodate new fields
+        self.root.geometry("500x350")
+        self.root.resizable(False, False)
 
-        # Create a label for CaseID
-        self.label = tk.Label(root, text="Enter CaseID:")
-        self.label.pack(pady=10)
+        # Load and set the background image
+        self.bg_image = Image.open("./src/bg_py_app.png")  # Path to your background image
+        self.bg_image = self.bg_image.resize((500, 350), Image.LANCZOS)  # Resize image to fit the window
+        self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
 
-        # Create an entry widget for CaseID input
-        self.entry = tk.Entry(root)
-        self.entry.pack(pady=5)
+        # Create a canvas to hold the background image and widgets
+        self.canvas = ctk.CTkCanvas(self.root, width=500, height=350, highlightthickness=0)
+        self.canvas.pack(fill='both', expand=True)
+        self.canvas.create_image(0, 0, anchor='nw', image=self.bg_image_tk)
 
-        # Create a label for Number of Batches
-        self.batches_label = tk.Label(root, text="Number of Batches:")
-        self.batches_label.pack(pady=10)
+        # Consistent width for entry fields and buttons
+        self.entry_width = 200  # Adjust the pixel width for entries and buttons
 
-        # Create an entry widget for Number of Batches input
-        self.batches_entry = tk.Entry(root)
-        self.batches_entry.pack(pady=5)
+        # Create a label for CaseID (centered)
+        self.canvas.create_text(250, 70, text="Enter CaseID", font=("Helvetica", 12, "bold"), fill="black")
 
-        # Create a submit button
-        self.submit_button = tk.Button(root, text="Submit", command=self.submit)
-        self.submit_button.pack(pady=10)
+        # CaseID entry with white background
+        self.caseid_entry = ctk.CTkEntry(
+            self.canvas, font=("Helvetica", 14), width=self.entry_width, height=40,
+            placeholder_text="Enter CaseID", fg_color="white", text_color="black", 
+            placeholder_text_color="#4d4949"
+        )
+        self.canvas.create_window(250, 110, window=self.caseid_entry)
+
+        # Create a label for Number of Batches (centered)
+        self.canvas.create_text(250, 150, text="Number of Batches", font=("Helvetica", 12, "bold"), fill="black")
+
+        # Number of Batches entry with white background
+        self.batches_entry = ctk.CTkEntry(
+            self.canvas, font=("Helvetica", 14), width=self.entry_width, height=40,
+            placeholder_text="Enter number of batches", fg_color="white", text_color="black", 
+            placeholder_text_color="#4d4949"
+        )
+        self.canvas.create_window(250, 190, window=self.batches_entry)
+
+        # Submit button with custom style
+        self.submit_button = ctk.CTkButton(
+            self.canvas, text="Submit", font=("Helvetica", 14), height=50, width=self.entry_width,
+            fg_color="#0073c2", hover_color="#448ec2",  text_color="white", command=self.submit
+        )
+        self.canvas.create_window(250, 245, window=self.submit_button)
 
     def submit(self):
-        user_input = self.entry.get()
+        user_input = self.caseid_entry.get()
         num_batches_input = self.batches_entry.get()
 
         if user_input.isdigit() and num_batches_input.isdigit():
@@ -54,3 +78,10 @@ class MainView:
                 messagebox.showwarning("No Directory Selected", "Please select a directory.")
         else:
             messagebox.showwarning("Invalid input", "Please enter valid numbers for CaseID and Number of Batches.")
+
+
+if __name__ == "__main__":
+    root = ctk.CTk()
+    app = MainView(root)
+    root.mainloop()
+    app.center_window(500, 350) 
