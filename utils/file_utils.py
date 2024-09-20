@@ -58,11 +58,8 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     pff_file_path = os.path.join(batch_folder_path, "extractData.pff")
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
+        run_pff_file(pff_file_path)  # Automatically run the .pff file after modification
 
-    # Auto-open extract.pen
-    pen_file_path = os.path.join(batch_folder_path, "extract.pen")
-    if os.path.exists(pen_file_path):
-        open_pen_file(pen_file_path)
 
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
     """Update extractData.pff to include the complete path for INPUT_FILE."""
@@ -83,10 +80,11 @@ def update_extract_data(pff_file_path, caseid_pattern, batch_no):
     except Exception as e:
         print(f"Error updating extractData.pff: {e}")
 
-def open_pen_file(pen_file_path):
-    """Open the extract.pen file with the default associated application."""
+
+def run_pff_file(pff_file_path):
+    """Automatically run the .pff file."""
     try:
-        os.startfile(pen_file_path)  # Open with the default associated application
-        print(f"{pen_file_path} opened successfully.")
+        os.startfile(pff_file_path)  # This will attempt to open the .pff file with its associated application
+
     except Exception as e:
-        print(f"Error opening {pen_file_path}: {e}")
+        print(f"Error running {pff_file_path}: {e}")
