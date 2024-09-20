@@ -17,5 +17,5 @@ def main():
     root.mainloop()
     root.deiconify()
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
