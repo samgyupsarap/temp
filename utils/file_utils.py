@@ -58,7 +58,7 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     pff_file_path = os.path.join(batch_folder_path, "extractData.pff")
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
-        run_pff_file(pff_file_path)  # Automatically run the .pff file after modification
+      # Automatically run the .pff file after modification
 
 
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
@@ -81,10 +81,3 @@ def update_extract_data(pff_file_path, caseid_pattern, batch_no):
         print(f"Error updating extractData.pff: {e}")
 
 
-def run_pff_file(pff_file_path):
-    """Automatically run the .pff file."""
-    try:
-        os.startfile(pff_file_path)  # This will attempt to open the .pff file with its associated application
-
-    except Exception as e:
-        print(f"Error running {pff_file_path}: {e}")
