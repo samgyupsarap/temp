@@ -6,10 +6,10 @@ from models.token_model import TokenStorage
 import threading
 import customtkinter as ctk
 
-def fetch_data(caseid_pattern, batchno, progress_label):
+def fetch_data(caseid_pattern, batchno, progress_label, records_count):
     """Fetch data from the API and update the progress label."""
     token = TokenStorage.get_token()
-    url = f"{API_URL}?caseidPattern={caseid_pattern}&batchno={batchno}"
+    url = f"{API_URL}?caseidPattern={caseid_pattern}&batchno={batchno}&limit={records_count}"
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -29,7 +29,7 @@ def fetch_data(caseid_pattern, batchno, progress_label):
         messagebox.showerror("API Error", f"Failed to fetch data: {e}")
         return None
 
-def process_batches(folder_path, caseid_pattern, num_batches):
+def process_batches(folder_path, caseid_pattern, num_batches, records_count):
     def fetch_batches():
         # Create a progress window
         progress_window = ctk.CTkToplevel()
@@ -51,7 +51,7 @@ def process_batches(folder_path, caseid_pattern, num_batches):
             progress_bar.set(batch_no / num_batches)  # Update progress bar based on batch progress
             progress_window.update()  # Refresh the window to show changes
 
-            api_data = fetch_data(caseid_pattern, batch_no, progress_label)
+            api_data = fetch_data(caseid_pattern, batch_no, progress_label, records_count)
 
             if not api_data or not api_data.get('results'):
                 break

@@ -9,56 +9,56 @@ class LoginView:
         self.root.title("Login")
 
         # Set a fixed window size
-        self.root.geometry("500x350")
+        self.root.geometry("500x1000")
         self.root.resizable(False, False)  # Prevent resizing
 
         # Load and set the background image
         self.bg_image = Image.open("./src/bg_py_app.png")  # Path to your image file
-        self.bg_image = self.bg_image.resize((500, 350), Image.LANCZOS)  # Resize image using LANCZOS filter
+        self.bg_image = self.bg_image.resize((500, 1000), Image.LANCZOS)  # Resize image using LANCZOS filter
         self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
 
         # Create a canvas and add the background image
-        self.canvas = ctk.CTkCanvas(self.root, width=500, height=350, highlightthickness=0)
+        self.canvas = ctk.CTkCanvas(self.root, width=500, height=1000, highlightthickness=0)
         self.canvas.pack(fill='both', expand=True)
         self.canvas.create_image(0, 0, anchor='nw', image=self.bg_image_tk)
 
         # Define width for consistency
-        self.entry_width = 200  # Adjust the pixel width for entries
+        self.entry_width = 280  # Adjust the pixel width for entries
 
         # Center the login label
-        self.canvas.create_text(250, 90, text="Login", font=("Helvetica", 22, "bold"), fill="black")
+        self.canvas.create_text(250, 340, text="Login", font=("Helvetica", 30, "bold"), fill="black")
 
         # Username entry with white background
         self.username_entry = ctk.CTkEntry(
-            self.canvas, font=("Helvetica", 14), width=self.entry_width, height=40,
+            self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
             placeholder_text="Enter username", fg_color="white",  # White background
             text_color="black",
             placeholder_text_color="#4d4949"
         )
-        self.canvas.create_window(250, 140, window=self.username_entry)
+        self.canvas.create_window(250, 400, window=self.username_entry)
 
         # Password entry with white background
         self.password_entry = ctk.CTkEntry(
-            self.canvas, show="*", font=("Helvetica", 14), width=self.entry_width, height=40,
+            self.canvas, show="*", font=("Helvetica", 18), width=self.entry_width, height=60,
             placeholder_text="Enter password", fg_color="white",  # White background
             text_color="black",
             placeholder_text_color="#4d4949"
         )
-        self.canvas.create_window(250, 190, window=self.password_entry)
+        self.canvas.create_window(250, 460, window=self.password_entry)
 
         # Login button with updated styles
         self.login_button = ctk.CTkButton(
             self.canvas,
             text="Login",
-            height=50,
+            height=70,
             command=self.handle_login,
-            font=("Helvetica", 16),
+            font=("Helvetica", 20, "bold"),
             width=self.entry_width,
             fg_color="#0073c2",  # Button background color
             hover_color="#448ec2",  # Hover background color
             text_color="white"  # Text color
         )
-        self.canvas.create_window(250, 240, window=self.login_button)
+        self.canvas.create_window(250, 540, window=self.login_button)
 
         # Bind focus events for username and password entries (move this after widget creation)
         self.username_entry.bind("<FocusIn>", self.on_focus_in_username)
