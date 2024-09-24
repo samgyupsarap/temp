@@ -2,7 +2,7 @@ import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import os
 from PIL import Image, ImageTk
-from controllers.data_controller import process_batches
+from controllers.data_controller import process_batches, get_total_records  # Import the necessary function
 
 class MainView:
     def __init__(self, root):
@@ -79,8 +79,12 @@ class MainView:
             messagebox.showwarning("No Directory Selected", "Please select a directory.")
             return
 
-        # Calculate the total number of records (for example, 5 million as a fixed value)
-        total_records = 5000000  # You can adjust this value as needed
+        # Fetch the total number of records from the API
+        total_records = get_total_records(user_input)
+
+        if total_records == 0:
+            messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
+            return
 
         # Calculate the total number of batches
         num_batches = (total_records + records_per_batch - 1) // records_per_batch

@@ -1,11 +1,33 @@
 import requests
 from tkinter import messagebox
 from utils.file_utils import save_data_to_file, create_folder_if_not_exists, copy_from_copyfolder
-from models.api_model import API_URL
+from models.api_model import API_URL, API_COUNT_URL  # Ensure you have a count URL for total records
 from models.token_model import TokenStorage
 import threading
 import customtkinter as ctk
 from concurrent.futures import ThreadPoolExecutor
+
+def get_total_records(caseid_pattern):
+    """Fetch the total number of records available from the custom API."""
+    token = TokenStorage.get_token()
+    url = f"{API_COUNT_URL}?caseidPattern={caseid_pattern}"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        
+        # Extract the count correctly
+        total_records = data.get('count', 0)
+        return total_records if isinstance(total_records, int) else total_records.get('count', 0)
+    except requests.RequestException as e:
+        messagebox.showerror("API Error", f"Failed to fetch total records: {e}")
+        return 0
 
 def fetch_all_data(caseid_pattern, max_limit):
     """Fetch all data from the API based on the caseid_pattern."""
@@ -33,8 +55,15 @@ def fetch_all_data(caseid_pattern, max_limit):
 def process_batches(folder_path, caseid_pattern, records_per_batch):
     """Process batches based on the number of records per batch and total records in the API."""
     
-    # Fetch all case IDs at once (or a large number, based on the API limit)
-    all_caseids = fetch_all_data(caseid_pattern, 100000000)  # Adjust limit based on your API's capabilities
+    # Fetch total records count first
+    total_records = get_total_records(caseid_pattern)
+    
+    if total_records == 0:
+        messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
+        return
+
+    # Now fetch all case IDs with the correct limit
+    all_caseids = fetch_all_data(caseid_pattern, total_records)
 
     if not all_caseids:
         messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
