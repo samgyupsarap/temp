@@ -7,7 +7,7 @@ import threading
 import customtkinter as ctk
 
 def fetch_data(caseid_pattern, batchno, offset, records_count):
-    """Fetch data from the API with pagination support and update the progress label."""
+    """Fetch data from the API with pagination support."""
     token = TokenStorage.get_token()
     url = f"{API_URL}?caseidPattern={caseid_pattern}&offset={offset}&limit={records_count}"
 
@@ -51,6 +51,8 @@ def get_total_records(caseid_pattern):
     except requests.RequestException as e:
         messagebox.showerror("API Error", f"Failed to fetch total records: {e}")
         return 0
+
+
 
 
 def process_batches(folder_path, caseid_pattern, records_per_batch):
@@ -106,11 +108,14 @@ def process_batches(folder_path, caseid_pattern, records_per_batch):
             # Copy files and folders from CopyFolder to the batch folder
             copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no)
 
-        # Close the progress window when done
+        # Once all batches are done, show the success message
         progress_label.configure(text="Completed!")
         progress_bar.set(1)
         progress_window.update()
         progress_window.after(2000, progress_window.destroy)  # Close the window after a delay
+
+        # Display success message after progress bar is done
+        messagebox.showinfo("Success", f"Folder '{caseid_pattern}' and all {num_batches} batch folders created with data.")
 
     # Start fetching batches in a separate thread
     threading.Thread(target=fetch_batches).start()

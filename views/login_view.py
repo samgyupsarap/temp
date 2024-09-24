@@ -26,7 +26,7 @@ class LoginView:
         self.entry_width = 280  # Adjust the pixel width for entries
 
         # Center the login label
-        self.canvas.create_text(250, 340, text="Login", font=("Helvetica", 30, "bold"), fill="black")
+        self.canvas.create_text(250, 350, text="Login", font=("Helvetica", 30, "bold"), fill="black")
 
         # Username entry with white background
         self.username_entry = ctk.CTkEntry(
@@ -35,7 +35,7 @@ class LoginView:
             text_color="black",
             placeholder_text_color="#4d4949"
         )
-        self.canvas.create_window(250, 400, window=self.username_entry)
+        self.canvas.create_window(250, 430, window=self.username_entry)
 
         # Password entry with white background
         self.password_entry = ctk.CTkEntry(
@@ -44,7 +44,7 @@ class LoginView:
             text_color="black",
             placeholder_text_color="#4d4949"
         )
-        self.canvas.create_window(250, 460, window=self.password_entry)
+        self.canvas.create_window(250, 500, window=self.password_entry)
 
         # Login button with updated styles
         self.login_button = ctk.CTkButton(
@@ -58,7 +58,7 @@ class LoginView:
             hover_color="#448ec2",  # Hover background color
             text_color="white"  # Text color
         )
-        self.canvas.create_window(250, 540, window=self.login_button)
+        self.canvas.create_window(250, 580, window=self.login_button)
 
         # Bind focus events for username and password entries (move this after widget creation)
         self.username_entry.bind("<FocusIn>", self.on_focus_in_username)
