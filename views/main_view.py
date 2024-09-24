@@ -1,3 +1,4 @@
+# views/main_view.py
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import os
@@ -34,18 +35,8 @@ class MainView:
         )
         self.canvas.create_window(250, 310, window=self.caseid_entry)
 
-        # Create a label for Number of Batches (centered)
-        self.canvas.create_text(250, 380, text="Number of Batches", font=("Helvetica", 16, "bold"), fill="black")
-
-        # Number of Batches entry with white background
-        self.batches_entry = ctk.CTkEntry(
-            self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
-            fg_color="white", text_color="black"
-        )
-        self.canvas.create_window(250, 430, window=self.batches_entry)
-
         # Create a label for Number of Records (centered)
-        self.canvas.create_text(250, 500, text="Number of Records per Batch", font=("Helvetica", 16, "bold"), fill="black")
+        self.canvas.create_text(250, 380, text="Number of Records per Batch", font=("Helvetica", 16, "bold"), fill="black")
 
         # Number of Records entry with white background
         self.records_entry = ctk.CTkEntry(
@@ -53,23 +44,21 @@ class MainView:
             placeholder_text="Default: 1000", fg_color="white", text_color="black", 
             placeholder_text_color="#4d4949"
         )
-        self.canvas.create_window(250, 550, window=self.records_entry)
+        self.canvas.create_window(250, 430, window=self.records_entry)
 
         # Submit button with custom style
         self.submit_button = ctk.CTkButton(
             self.canvas, text="Submit", font=("Helvetica", 20, "bold"), height=70, width=self.entry_width,
             fg_color="#0073c2", hover_color="#448ec2", text_color="white", command=self.submit
         )
-        self.canvas.create_window(250, 640, window=self.submit_button)
+        self.canvas.create_window(250, 520, window=self.submit_button)
 
     def submit(self):
         user_input = self.caseid_entry.get()
-        num_batches_input = self.batches_entry.get()
         records_input = self.records_entry.get()
 
-        if user_input.isdigit() and num_batches_input.isdigit():
+        if user_input.isdigit():
             folder_name = f"{user_input}"
-            num_batches = int(num_batches_input)
             records = int(records_input) if records_input else 1000  # Use 1000 if empty
 
             # Ask the user to choose a directory
@@ -81,14 +70,14 @@ class MainView:
 
                 try:
                     # Process batches
-                    process_batches(full_path, user_input, num_batches, records)
+                    process_batches(full_path, user_input, records)
                     messagebox.showinfo("Success", f"Folder '{folder_name}' and all batch folders created with data.")
                 except Exception as e:
                     messagebox.showerror("Error", str(e))
             else:
                 messagebox.showwarning("No Directory Selected", "Please select a directory.")
         else:
-            messagebox.showwarning("Invalid input", "Please enter valid numbers for CaseID and Number of Batches.")
+            messagebox.showwarning("Invalid input", "Please enter a valid CaseID.")
 
 if __name__ == "__main__":
     root = ctk.CTk()
