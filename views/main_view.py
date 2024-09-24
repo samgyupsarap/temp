@@ -1,4 +1,3 @@
-# views/main_view.py
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import os
@@ -26,46 +25,32 @@ class MainView:
         self.entry_width = 300  # Adjust the pixel width for entries and buttons
 
         # Create a label for CaseID (centered)
-        self.canvas.create_text(250, 350, text="CaseID", font=("Helvetica", 16, "bold"), fill="black")
+        self.canvas.create_text(250, 260, text="CaseID", font=("Helvetica", 16, "bold"), fill="black")
 
         # CaseID entry with white background
         self.caseid_entry = ctk.CTkEntry(
             self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
             fg_color="white", text_color="black"
         )
-        self.canvas.create_window(250, 400, window=self.caseid_entry)
+        self.canvas.create_window(250, 310, window=self.caseid_entry)
 
-<<<<<<< HEAD
-        # Create a label for Number of Batches (centered)
-        self.canvas.create_text(250, 450, text="Number of Records per Batches", font=("Helvetica", 16, "bold"), fill="black")
- 
-=======
         # Create a label for Number of Records (centered)
         self.canvas.create_text(250, 380, text="Number of Records per Batch", font=("Helvetica", 16, "bold"), fill="black")
 
->>>>>>> 4bd52c340dd93145af77fedd49a2a2d2cfdb2990
         # Number of Records entry with white background
         self.records_entry = ctk.CTkEntry(
             self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
             placeholder_text="Default: 1000", fg_color="white", text_color="black", 
             placeholder_text_color="#4d4949"
         )
-<<<<<<< HEAD
-        self.canvas.create_window(250, 500, window=self.records_entry)
-=======
         self.canvas.create_window(250, 430, window=self.records_entry)
->>>>>>> 4bd52c340dd93145af77fedd49a2a2d2cfdb2990
 
         # Submit button with custom style
         self.submit_button = ctk.CTkButton(
             self.canvas, text="Submit", font=("Helvetica", 20, "bold"), height=70, width=self.entry_width,
             fg_color="#0073c2", hover_color="#448ec2", text_color="white", command=self.submit
         )
-<<<<<<< HEAD
-        self.canvas.create_window(250, 580, window=self.submit_button)
-=======
         self.canvas.create_window(250, 520, window=self.submit_button)
->>>>>>> 4bd52c340dd93145af77fedd49a2a2d2cfdb2990
 
     def submit(self):
         user_input = self.caseid_entry.get()
@@ -73,10 +58,6 @@ class MainView:
 
         if user_input.isdigit():
             folder_name = f"{user_input}"
-<<<<<<< HEAD
-            num_batches = 1
-=======
->>>>>>> 4bd52c340dd93145af77fedd49a2a2d2cfdb2990
             records = int(records_input) if records_input else 1000  # Use 1000 if empty
 
             # Ask the user to choose a directory
@@ -87,7 +68,7 @@ class MainView:
                 full_path = os.path.join(folder_path, folder_name)
 
                 try:
-                    # Process batches
+                    # Process batches, calculating the number of batches inside the process_batches function
                     process_batches(full_path, user_input, records)
                     messagebox.showinfo("Success", f"Folder '{folder_name}' and all batch folders created with data.")
                 except Exception as e:

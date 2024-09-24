@@ -1,20 +1,23 @@
 import os
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
+from .token_model import TokenStorage
 
 # Load environment variables from the .env file
 load_dotenv()
 
-# Retrieve API_URL from environment variables
+# Retrieve API URLs from environment variables
 API_URL = os.getenv('API_URL')
 LOGIN_URL = os.getenv('LOGIN_URL')
-# Ensure API_URL is defined
+API_COUNT_URL = os.getenv('API_COUNT_URL')
+
+# Ensure required environment variables are defined
 if not API_URL:
     raise ValueError("API_URL environment variable is not set.")
 if not LOGIN_URL:
     raise ValueError("LOGIN_URL environment variable is not set.")
-
-LOGIN_URL = f"{LOGIN_URL}"  # Ensure proper URL formation
+if not API_COUNT_URL:
+    raise ValueError("API_COUNT_URL environment variable is not set.")
 
 def login(username, password):
     """Log in to the API and retrieve the authentication token."""
@@ -36,6 +39,9 @@ def login(username, password):
 
         if not token:
             raise ValueError("Authentication token not found in the response.")
+
+        # Store the token
+        TokenStorage.set_token(token)
 
         return token
 
