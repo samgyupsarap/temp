@@ -1,3 +1,4 @@
+# controllers/data_controller.py
 import requests
 from tkinter import messagebox
 from utils.file_utils import save_data_to_file, create_folder_if_not_exists, copy_from_copyfolder
@@ -6,7 +7,7 @@ from models.token_model import TokenStorage
 import threading
 import customtkinter as ctk
 
-def fetch_data(caseid_pattern, batchno, progress_label, records_count):
+def fetch_data(caseid_pattern, batchno, records_count):
     """Fetch data from the API and update the progress label."""
     token = TokenStorage.get_token()
     url = f"{API_URL}?caseidPattern={caseid_pattern}&batchno={batchno}&limit={records_count}"
@@ -29,7 +30,13 @@ def fetch_data(caseid_pattern, batchno, progress_label, records_count):
         messagebox.showerror("API Error", f"Failed to fetch data: {e}")
         return None
 
-def process_batches(folder_path, caseid_pattern, num_batches, records_count):
+def process_batches(folder_path, caseid_pattern, records_per_batch):
+    """Process batches based on the total records and records per batch."""
+    total_records = 5000000  # For example, if the total records is 5 million
+
+    # Calculate the number of batches needed based on the total records and records per batch
+    num_batches = (total_records + records_per_batch - 1) // records_per_batch  # Ceiling division to get the number of batches
+
     def fetch_batches():
         # Create a progress window
         progress_window = ctk.CTkToplevel()
@@ -51,7 +58,7 @@ def process_batches(folder_path, caseid_pattern, num_batches, records_count):
             progress_bar.set(batch_no / num_batches)  # Update progress bar based on batch progress
             progress_window.update()  # Refresh the window to show changes
 
-            api_data = fetch_data(caseid_pattern, batch_no, progress_label, records_count)
+            api_data = fetch_data(caseid_pattern, batch_no, records_per_batch)
 
             if not api_data or not api_data.get('results'):
                 break
@@ -61,7 +68,7 @@ def process_batches(folder_path, caseid_pattern, num_batches, records_count):
             batch_folder_path, original_folder_path = create_folder_if_not_exists(folder_path, subfolder_name)
 
             # Save API data to text file
-            save_data_to_file(batch_folder_path, caseid_pattern, batch_no, api_data, original_folder_path)
+            save_data_to_file(batch_folder_path, caseid_pattern, batch_no, api_data, original_folder_path, records_per_batch)
 
             # Copy files and folders from CopyFolder to the batch folder
             copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no)

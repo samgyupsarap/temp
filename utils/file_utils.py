@@ -14,8 +14,8 @@ def create_folder_if_not_exists(parent_folder, folder_name):
     os.makedirs(batch_folder_path, exist_ok=True)
     return batch_folder_path, original_folder_path
 
-def save_data_to_file(folder_path, caseid_pattern, batch_no, api_data, original_folder_path):
-    """Save case IDs to a text file and update the extractData.pff."""
+def save_data_to_file(folder_path, caseid_pattern, batch_no, api_data, original_folder_path, records_per_batch):
+    """Save case IDs to a text file and update the batch path."""
     txt_file_name = f"{caseid_pattern}_Batch_{batch_no}.txt"
     txt_file_path = os.path.join(folder_path, txt_file_name)
 
@@ -26,15 +26,13 @@ def save_data_to_file(folder_path, caseid_pattern, batch_no, api_data, original_
                 if isinstance(item, dict) and 'caseid' in item:
                     file.write(f"{item['caseid']}\n")
 
-    except Exception as e:
-        print(f"Error saving case IDs to file: {e}")
-
-    path_file_path = os.path.join(folder_path, "batch_path.txt")
-    try:
+        # Save the path of the text file
+        path_file_path = os.path.join(folder_path, "batch_path.txt")
         with open(path_file_path, "w") as path_file:
             path_file.write(f"{os.path.abspath(txt_file_path)}")
+    
     except Exception as e:
-        print(f"Error saving batch path to file: {e}")
+        print(f"Error saving case IDs to file: {e}")
 
 def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     """Copy files from CopyFolder to the batch folder and modify extractData.pff if it exists."""
@@ -58,8 +56,6 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     pff_file_path = os.path.join(batch_folder_path, "extractData.pff")
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
-      # Automatically run the .pff file after modification
-
 
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
     """Update extractData.pff to include the complete path for INPUT_FILE."""
@@ -79,5 +75,3 @@ def update_extract_data(pff_file_path, caseid_pattern, batch_no):
 
     except Exception as e:
         print(f"Error updating extractData.pff: {e}")
-
-
