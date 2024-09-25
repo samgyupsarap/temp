@@ -1,9 +1,10 @@
 import shutil
 import os
+import subprocess
+from tkinter import messagebox
 
 def create_folder_if_not_exists(parent_folder, folder_name):
     """Create a folder if it doesn't exist, and append (new) if a folder with the same name already exists."""
-    # Ensure the parent folder exists
     os.makedirs(parent_folder, exist_ok=True)
     
     batch_folder_path = os.path.join(parent_folder, folder_name)
@@ -25,7 +26,7 @@ def save_data_to_file(folder_path, caseid_pattern, batch_no, case_ids):
     try:
         with open(txt_file_path, "w") as file:
             for case_id in case_ids:
-                file.write(f"{case_id}\n") 
+                file.write(f"{case_id}\n")
 
         # Save the path of the text file
         path_file_path = os.path.join(folder_path, "batch_path.txt")
@@ -58,6 +59,12 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
 
+        # Ask the user if they want to run the .pff file
+        run_pff = messagebox.askyesno("Run .pff File", "Do you want to run the extractData.pff file?")
+        
+        if run_pff:
+            autorun_pff(pff_file_path)
+
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
     """Update extractData.pff to include the complete path for INPUT_FILE."""
     txt_file_name = f"{caseid_pattern}_Batch_{batch_no}.txt"
@@ -76,3 +83,17 @@ def update_extract_data(pff_file_path, caseid_pattern, batch_no):
 
     except Exception as e:
         print(f"Error updating extractData.pff: {e}")
+
+def autorun_pff(pff_file_path):
+    """Open the .pff file with the default associated application."""
+    try:
+        if os.name == 'posix':  # For macOS/Linux
+            subprocess.run(['open', pff_file_path], check=True)
+        elif os.name == 'nt':  # For Windows
+            os.startfile(pff_file_path)  # startfile is used in Windows to open files with their associated app
+        else:
+            messagebox.showerror("Unsupported OS", "This feature is not supported on your operating system.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to open the .pff file: {e}")
+
+

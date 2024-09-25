@@ -114,7 +114,7 @@ def process_batches(parent_folder_path, caseid_pattern, records_per_batch):
             progress_window.update()  # Refresh the window to show changes
 
         # Use ThreadPoolExecutor to run batch saving concurrently
-        with ThreadPoolExecutor(max_workers=5) as executor:  # Adjust the number of workers as needed
+        with ThreadPoolExecutor(max_workers=10) as executor:  # Adjust the number of workers as needed
             for batch_no in range(1, num_batches + 1):
                 executor.submit(save_batch, batch_no)
                 time.sleep(0.5)  # Small delay to avoid crashing
