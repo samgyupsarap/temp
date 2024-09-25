@@ -49,3 +49,27 @@ def login(username, password):
         raise RuntimeError(f"Failed to log in: {e}")
     except ValueError as ve:
         raise RuntimeError(str(ve))
+
+def signup(username, password):
+    """Register a new user with the API."""
+    headers = {
+        "Content-Type": "application/json"
+    }
+    json_body = {
+        "username": username,
+        "password": password
+    }
+
+    SIGNUP_URL = os.getenv('SIGNUP_URL')
+
+    try:
+        response = requests.post(SIGNUP_URL, json=json_body, headers=headers)
+        response.raise_for_status()  # Raises an exception for 4xx and 5xx responses
+
+    except requests.RequestException as e:
+        # Print the error response content if available
+        if e.response is not None:
+            print(f"Error response content: {e.response.content.decode()}")
+        else:
+            print("No response content available.")
+        raise RuntimeError(f"Failed to sign up: {e}")
