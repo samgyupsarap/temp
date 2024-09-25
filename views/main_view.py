@@ -2,7 +2,7 @@ import customtkinter as ctk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from controllers.data_controller import handle_submit  # Import the new function
-
+import os
 
 class MainView:
     def __init__(self, root):
@@ -12,9 +12,14 @@ class MainView:
         self.root.resizable(False, False)
 
         # Load and set the background image
-        self.bg_image = Image.open("./src/bg_py_app.png")  # Path to your background image
-        self.bg_image = self.bg_image.resize((500, 1000), Image.LANCZOS)  # Resize image to fit the window
-        self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
+        try:
+            image_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'bg_py_app.png')
+            self.bg_image = Image.open(image_path)
+            self.bg_image = self.bg_image.resize((500, 1000), Image.LANCZOS)
+            self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
+        except FileNotFoundError:
+            messagebox.showerror("Error", "Background image not found.")
+            self.root.destroy()  # Close the application if the image is not found
 
         # Create a canvas to hold the background image and widgets
         self.canvas = ctk.CTkCanvas(self.root, width=500, height=1000, highlightthickness=0)
@@ -48,13 +53,44 @@ class MainView:
         # Submit button with custom style
         self.submit_button = ctk.CTkButton(
             self.canvas, text="Submit", font=("Helvetica", 20, "bold"), height=70, width=self.entry_width,
-            fg_color="#0073c2", hover_color="#005ea6", text_color="white", command=self.submit
+            fg_color="#0073c2", hover_color="#005ea6", text_color="white", command=self.confirm_submit
         )
         self.canvas.create_window(250, 600, window=self.submit_button)
 
-    def submit(self):
+        # Handle window close event
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+    def confirm_submit(self):
         caseid_pattern = self.caseid_entry.get().strip()
         records_per_batch = self.records_entry.get().strip()
 
-        # Call the handle_submit function from data_controller
-        handle_submit(caseid_pattern, int(records_per_batch) if records_per_batch else 1000)
+        # Validate inputs
+        if not caseid_pattern:
+            messagebox.showwarning("Input Error", "Please enter a CaseID pattern.")
+            return
+
+        if records_per_batch:
+            try:
+                records_per_batch = int(records_per_batch)
+                if records_per_batch <= 0:
+                    raise ValueError("Number of records must be positive.")
+            except ValueError:
+                messagebox.showerror("Input Error", "Please enter a valid number for records per batch.")
+                return
+        else:
+            records_per_batch = 1000  # Default value
+
+        # Show confirmation dialog
+        confirm = messagebox.askyesno("Confirm Submission", f"Are you sure you want to submit?\nCaseID: {caseid_pattern}\nRecords per Batch: {records_per_batch}")
+        if confirm:
+            # Call the handle_submit function from data_controller
+            handle_submit(caseid_pattern, records_per_batch)
+
+    def on_closing(self):
+        if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.root.destroy()  # Safely destroy the app
+
+if __name__ == "__main__":
+    root = ctk.CTk()
+    app = MainView(root)
+    root.mainloop()
