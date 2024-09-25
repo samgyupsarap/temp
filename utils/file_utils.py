@@ -2,6 +2,7 @@ import shutil
 import os
 import subprocess
 from tkinter import messagebox
+from concurrent.futures import ThreadPoolExecutor
 
 def create_folder_if_not_exists(parent_folder, folder_name):
     """Create a folder if it doesn't exist, and append (new) if a folder with the same name already exists."""
@@ -59,9 +60,60 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
 
-        # Ask the user if they want to run the .pff file
-        run_pff = messagebox.askyesno("Run .pff File", "Do you want to run the extractData.pff file?")
-        
+        # Ask the user if they want to open the .pff file after completing the batch
+        run_pff = messagebox.askyesno("Open .pff File", f"Batch {batch_no} is complete. Do you want to open the extractData.pff file?")
+        if run_pff:
+            autorun_pff(pff_file_path)
+
+def fetch_batches():
+    """Process all batches, then prompt to open the .pff file after everything is completed."""
+    # Create a progress window (as done previously)
+    progress_window = ctk.CTkToplevel()
+    progress_window.title("Fetching Data")
+    progress_window.geometry("300x150")
+
+    progress_label = ctk.CTkLabel(progress_window, text="Starting batch processing...")
+    progress_label.pack(pady=10)
+
+    progress_bar = ctk.CTkProgressBar(progress_window, width=250)
+    progress_bar.pack(pady=10)
+    progress_bar.set(0)
+
+    def save_batch(batch_no):
+        start_index = (batch_no - 1) * records_per_batch
+        end_index = min(start_index + records_per_batch, total_records)
+        batch_caseids = all_caseids[start_index:end_index]
+
+        # Create the Batch folder inside the main batch directory
+        subfolder_name = f"{caseid_pattern}_Batch_{batch_no}"
+        batch_folder_path = create_folder_if_not_exists(main_batch_folder, subfolder_name)
+
+        # Save case IDs to a text file
+        save_data_to_file(batch_folder_path, caseid_pattern, batch_no, batch_caseids)
+
+        # Copy files from CopyFolder and update .pff if needed
+        copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no)
+
+        # Update progress
+        progress_label.configure(text=f"Completed Batch {batch_no}/{num_batches}")
+        progress_bar.set(batch_no / num_batches)
+        progress_window.update()
+
+    # Run the batch processing using a ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        for batch_no in range(1, num_batches + 1):
+            executor.submit(save_batch, batch_no)
+
+    # Close the progress window once all batches are completed
+    progress_label.configure(text="All batches completed!")
+    progress_bar.set(1)
+    progress_window.update()
+    progress_window.after(2000, progress_window.destroy)
+
+    # After all batches are processed, ask the user if they want to open the .pff file from the first batch
+    pff_file_path = os.path.join(main_batch_folder, f"{caseid_pattern}_Batch_1", "extractData.pff")
+    if os.path.exists(pff_file_path):
+        run_pff = messagebox.askyesno("Open .pff File", "All batches are complete. Do you want to open the extractData.pff file?")
         if run_pff:
             autorun_pff(pff_file_path)
 
@@ -95,5 +147,3 @@ def autorun_pff(pff_file_path):
             messagebox.showerror("Unsupported OS", "This feature is not supported on your operating system.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to open the .pff file: {e}")
-
-
