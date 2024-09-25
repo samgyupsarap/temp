@@ -1,11 +1,13 @@
 import requests
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 from utils.file_utils import save_data_to_file, create_folder_if_not_exists, copy_from_copyfolder
 from models.api_model import API_URL, API_COUNT_URL  # Ensure you have a count URL for total records
 from models.token_model import TokenStorage
 import threading
 import customtkinter as ctk
 from concurrent.futures import ThreadPoolExecutor
+import os
+import time
 
 def get_total_records(caseid_pattern):
     """Fetch the total number of records available from the custom API."""
@@ -52,9 +54,11 @@ def fetch_all_data(caseid_pattern, max_limit):
         messagebox.showerror("API Error", f"Failed to fetch data: {e}")
         return None
 
-def process_batches(folder_path, caseid_pattern, records_per_batch):
-    """Process batches based on the number of records per batch and total records in the API."""
-    
+def process_batches(parent_folder_path, caseid_pattern, records_per_batch):
+    """Process batches based on the number of records per batch and total records in the API."""    
+    # Create the main batch directory if it doesn't exist
+    main_batch_folder = create_folder_if_not_exists(parent_folder_path, caseid_pattern)
+
     # Fetch total records count first
     total_records = get_total_records(caseid_pattern)
     
@@ -94,9 +98,9 @@ def process_batches(folder_path, caseid_pattern, records_per_batch):
             end_index = min(start_index + records_per_batch, total_records)
             batch_caseids = all_caseids[start_index:end_index]
 
-            # Create the Batch folder inside the CaseID folder
+            # Create the Batch folder inside the main batch directory
             subfolder_name = f"{caseid_pattern}_Batch_{batch_no}"
-            batch_folder_path = create_folder_if_not_exists(folder_path, subfolder_name)
+            batch_folder_path = create_folder_if_not_exists(main_batch_folder, subfolder_name)
 
             # Save API data to a text file (only case IDs)
             save_data_to_file(batch_folder_path, caseid_pattern, batch_no, batch_caseids)
@@ -113,6 +117,7 @@ def process_batches(folder_path, caseid_pattern, records_per_batch):
         with ThreadPoolExecutor(max_workers=5) as executor:  # Adjust the number of workers as needed
             for batch_no in range(1, num_batches + 1):
                 executor.submit(save_batch, batch_no)
+                time.sleep(0.5)  # Small delay to avoid crashing
 
         # Close the progress window when done
         progress_label.configure(text="All batches completed!")
@@ -122,3 +127,31 @@ def process_batches(folder_path, caseid_pattern, records_per_batch):
 
     # Start fetching batches in a separate thread
     threading.Thread(target=fetch_batches).start()
+
+def handle_submit(caseid_pattern, records_per_batch):
+    """Handle the submit logic from the main view."""
+    folder_path = filedialog.askdirectory(title="Select Parent Directory")
+
+    if not folder_path:
+        messagebox.showwarning("No Directory Selected", "Please select a directory.")
+        return
+
+    # Fetch the total number of records from the API
+    total_records = get_total_records(caseid_pattern)
+
+    if total_records == 0:
+        messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
+        return
+
+    # Calculate the total number of batches
+    num_batches = (total_records + records_per_batch - 1) // records_per_batch
+
+    # Show a confirmation message with the total number of batches
+    confirm_message = f"This operation will generate {num_batches} batches, each with up to {records_per_batch} records.\n\nDo you want to proceed?"
+    confirm = messagebox.askyesno("Confirm Batch Generation", confirm_message)
+
+    if not confirm:
+        return  # Stop processing if the user selects 'No'
+
+    # Start processing batches in a separate thread
+    threading.Thread(target=process_batches, args=(folder_path, caseid_pattern, records_per_batch)).start()

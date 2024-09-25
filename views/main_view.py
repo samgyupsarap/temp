@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
-import os
 from PIL import Image, ImageTk
-from controllers.data_controller import process_batches, get_total_records  # Import the necessary function
+from controllers.data_controller import handle_submit  # Import the new function
+
 
 class MainView:
     def __init__(self, root):
@@ -48,64 +48,13 @@ class MainView:
         # Submit button with custom style
         self.submit_button = ctk.CTkButton(
             self.canvas, text="Submit", font=("Helvetica", 20, "bold"), height=70, width=self.entry_width,
-            fg_color="#0073c2", hover_color="#448ec2", text_color="white", command=self.submit
+            fg_color="#0073c2", hover_color="#005ea6", text_color="white", command=self.submit
         )
-        self.canvas.create_window(250, 580, window=self.submit_button)
+        self.canvas.create_window(250, 600, window=self.submit_button)
 
     def submit(self):
-        user_input = self.caseid_entry.get()
-        records_input = self.records_entry.get()
+        caseid_pattern = self.caseid_entry.get().strip()
+        records_per_batch = self.records_entry.get().strip()
 
-        # Validate CaseID input
-        if not user_input.isdigit():
-            messagebox.showwarning("Invalid input", "Please enter a valid CaseID.")
-            return
-
-        folder_name = f"{user_input}"
-
-        # Validate and parse the number of records per batch input
-        if records_input.isdigit():
-            records_per_batch = int(records_input)
-        elif not records_input:  # If no input, default to 1000
-            records_per_batch = 1000
-        else:
-            messagebox.showwarning("Invalid input", "Please enter a valid number for records per batch.")
-            return
-
-        # Ask the user to choose a directory
-        folder_path = filedialog.askdirectory(title="Select Directory")
-
-        if not folder_path:
-            messagebox.showwarning("No Directory Selected", "Please select a directory.")
-            return
-
-        # Fetch the total number of records from the API
-        total_records = get_total_records(user_input)
-
-        if total_records == 0:
-            messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
-            return
-
-        # Calculate the total number of batches
-        num_batches = (total_records + records_per_batch - 1) // records_per_batch
-
-        # Show a confirmation message with the total number of batches
-        confirm_message = f"This operation will generate {num_batches} batches, each with up to {records_per_batch} records.\n\nDo you want to proceed?"
-        confirm = messagebox.askyesno("Confirm Batch Generation", confirm_message)
-
-        if not confirm:
-            return  # Stop processing if the user selects 'No'
-
-        # Create the CaseID folder in the selected directory
-        full_path = os.path.join(folder_path, folder_name)
-
-        try:
-            # Process batches, passing the validated records_per_batch
-            process_batches(full_path, user_input, records_per_batch)
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
-
-if __name__ == "__main__":
-    root = ctk.CTk()
-    app = MainView(root)
-    root.mainloop()
+        # Call the handle_submit function from data_controller
+        handle_submit(caseid_pattern, int(records_per_batch) if records_per_batch else 1000)

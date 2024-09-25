@@ -3,6 +3,9 @@ import os
 
 def create_folder_if_not_exists(parent_folder, folder_name):
     """Create a folder if it doesn't exist, and append (new) if a folder with the same name already exists."""
+    # Ensure the parent folder exists
+    os.makedirs(parent_folder, exist_ok=True)
+    
     batch_folder_path = os.path.join(parent_folder, folder_name)
     
     # Use a count to create unique folder names if necessary
@@ -11,7 +14,7 @@ def create_folder_if_not_exists(parent_folder, folder_name):
         batch_folder_path = os.path.join(parent_folder, f"{folder_name} ({count})")
         count += 1
 
-    os.makedirs(batch_folder_path, exist_ok=True)
+    os.makedirs(batch_folder_path, exist_ok=True)  # Create the final batch folder
     return batch_folder_path
 
 def save_data_to_file(folder_path, caseid_pattern, batch_no, case_ids):
