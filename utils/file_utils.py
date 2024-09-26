@@ -1,5 +1,6 @@
 import shutil
 import os
+import customtkinter as ctk
 import subprocess
 from tkinter import messagebox
 from concurrent.futures import ThreadPoolExecutor
@@ -61,9 +62,8 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
 
         # Ask the user if they want to open the .pff file after completing the batch
-        run_pff = messagebox.askyesno("Open .pff File", f"Batch {batch_no} is complete. Do you want to open the extractData.pff file?")
-        if run_pff:
-            autorun_pff(pff_file_path)
+    
+        autorun_pff(pff_file_path)
 
 def fetch_batches():
     """Process all batches, then prompt to open the .pff file after everything is completed."""
@@ -113,8 +113,7 @@ def fetch_batches():
     # After all batches are processed, ask the user if they want to open the .pff file from the first batch
     pff_file_path = os.path.join(main_batch_folder, f"{caseid_pattern}_Batch_1", "extractData.pff")
     if os.path.exists(pff_file_path):
-        run_pff = messagebox.askyesno("Open .pff File", "All batches are complete. Do you want to open the extractData.pff file?")
-        if run_pff:
+            
             autorun_pff(pff_file_path)
 
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
