@@ -61,13 +61,14 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     if os.path.exists(pff_file_path):
         update_extract_data(pff_file_path, caseid_pattern, batch_no)
 
-        # Ask the user if they want to open the .pff file after completing the batch
-    
-        autorun_pff(pff_file_path)
+    # Optionally, open the .pff file after completing the batch
+    autorun_pff(pff_file_path)
 
-def fetch_batches():
-    """Process all batches, then prompt to open the .pff file after everything is completed."""
-    # Create a progress window (as done previously)
+def fetch_batches(main_batch_folder, caseid_pattern, all_caseids, records_per_batch, total_records):
+    """Process all batches and update the progress."""
+    num_batches = (total_records + records_per_batch - 1) // records_per_batch  # Calculate number of batches
+
+    # Create a progress window
     progress_window = ctk.CTkToplevel()
     progress_window.title("Fetching Data")
     progress_window.geometry("300x150")
@@ -110,11 +111,10 @@ def fetch_batches():
     progress_window.update()
     progress_window.after(2000, progress_window.destroy)
 
-    # After all batches are processed, ask the user if they want to open the .pff file from the first batch
+    # After all batches are processed, open the .pff file from the first batch
     pff_file_path = os.path.join(main_batch_folder, f"{caseid_pattern}_Batch_1", "extractData.pff")
     if os.path.exists(pff_file_path):
-            
-            autorun_pff(pff_file_path)
+        autorun_pff(pff_file_path)
 
 def update_extract_data(pff_file_path, caseid_pattern, batch_no):
     """Update extractData.pff to include the complete path for INPUT_FILE."""
@@ -146,3 +146,5 @@ def autorun_pff(pff_file_path):
             messagebox.showerror("Unsupported OS", "This feature is not supported on your operating system.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to open the .pff file: {e}")
+
+# Call the fetch_batches function somewhere in your code with appropriate arguments
