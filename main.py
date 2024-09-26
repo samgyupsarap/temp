@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox  # Import messagebox for showing dialog boxes
 from controllers.login_controller import LoginController
 from views.login_view import LoginView
 import threading
@@ -18,10 +19,11 @@ class Application(tk.Tk):
     def on_closing(self):
         """Handle the close event of the main window."""
         if self.thread and self.thread.is_alive():
-            if tk.messagebox.askokcancel("Quit", "Batch processing is still running. Are you sure you want to quit?"):
+            if messagebox.askokcancel("Quit", "Batch processing is still running. Are you sure you want to quit?"):
                 self.destroy()  # Destroy the main window
         else:
-            self.destroy()  # Destroy the main window
+            if messagebox.askokcancel("Quit", "Do you want to quit?"):
+                self.destroy()  # Destroy the main window
 
 def main():
     app = Application()

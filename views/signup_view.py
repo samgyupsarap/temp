@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from tkinter import messagebox
 from controllers.signup_controller import SignupController  # Import the controller
 import os
+ctk.set_appearance_mode("light")
 
 class SignupView:
     def __init__(self, root, on_signup_success):
@@ -31,7 +32,7 @@ class SignupView:
 
         self.entry_width = 280  # Adjust the pixel width for entries
 
-        self.canvas.create_text(250, 350, text="Sign Up", font=("Helvetica", 30, "bold"), fill="black")
+        self.canvas.create_text(250, 320, text="Sign Up", font=("Helvetica", 30, "bold"), fill="black")
 
         # Username entry
         self.username_entry = ctk.CTkEntry(
@@ -90,13 +91,12 @@ class SignupView:
         self.root.destroy()  # Close the signup window
         self.on_signup_success()  # Call the on_signup_success method of the LoginView
 
-def on_closing(self):
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        try:
-            self.root.destroy()  # Safely destroy the app
-        except Exception as e:
-            print(f"Error while closing the application: {e}")
-
+    def on_closing(self):
+        if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            try:
+                self.root.destroy()  # Safely destroy the app
+            except Exception as e:
+                print(f"Error while closing the application: {e}")
 
 if __name__ == "__main__":
     root = ctk.CTk()

@@ -35,7 +35,7 @@ class LoginView:
         self.canvas.create_image(0, 0, anchor='nw', image=self.bg_image_tk)
 
         self.entry_width = 280  # Adjust the pixel width for entries
-        self.canvas.create_text(250, 350, text="Login", font=("Helvetica", 30, "bold"), fill="black")
+        self.canvas.create_text(250, 320, text="Login", font=("Helvetica", 30, "bold"), fill="black")
 
         self.username_entry = ctk.CTkEntry(
             self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
