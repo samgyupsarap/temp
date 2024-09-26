@@ -63,14 +63,14 @@ def process_batches(parent_folder_path, caseid_pattern, records_per_batch):
     total_records = get_total_records(caseid_pattern)
     
     if total_records == 0:
-        messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
+        messagebox.showerror("No Data", "No records found for the given GeoIDs pattern.")
         return
 
     # Now fetch all case IDs with the correct limit
     all_caseids = fetch_all_data(caseid_pattern, total_records)
 
     if not all_caseids:
-        messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
+        messagebox.showerror("No Data", "No records found for the given GeoIDs pattern.")
         return
 
     # Calculate the number of batches needed
@@ -140,7 +140,7 @@ def handle_submit(caseid_pattern, records_per_batch):
     total_records = get_total_records(caseid_pattern)
 
     if total_records == 0:
-        messagebox.showerror("No Data", "No records found for the given CaseID pattern.")
+        messagebox.showerror("No Data", "No records found for the given GeoIDs pattern.")
         return
 
     # Calculate the total number of batches

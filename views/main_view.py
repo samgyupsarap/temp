@@ -7,7 +7,7 @@ import os
 class MainView:
     def __init__(self, root):
         self.root = root
-        self.root.title("Finding CaseID")
+        self.root.title("Finding GeoID")
         self.root.geometry("500x1000")
         self.root.resizable(False, False)
 
@@ -30,7 +30,7 @@ class MainView:
         self.entry_width = 300  # Adjust the pixel width for entries and buttons
 
         # Create a label for CaseID (centered)
-        self.canvas.create_text(250, 330, text="CaseID", font=("Helvetica", 16, "bold"), fill="black")
+        self.canvas.create_text(250, 330, text="GeoID", font=("Helvetica", 16, "bold"), fill="black")
 
         # CaseID entry with white background
         self.caseid_entry = ctk.CTkEntry(
@@ -66,7 +66,7 @@ class MainView:
 
         # Validate inputs
         if not caseid_pattern:
-            messagebox.showwarning("Input Error", "Please enter a CaseID pattern.")
+            messagebox.showwarning("Input Error", "Please enter a GeoID pattern.")
             return
 
         if records_per_batch:
@@ -81,7 +81,7 @@ class MainView:
             records_per_batch = 1000  # Default value
 
         # Show confirmation dialog
-        confirm = messagebox.askyesno("Confirm Submission", f"Are you sure you want to submit?\nCaseID: {caseid_pattern}\nRecords per Batch: {records_per_batch}")
+        confirm = messagebox.askyesno("Confirm Submission", f"Are you sure you want to submit?\GeoID: {caseid_pattern}\nRecords per Batch: {records_per_batch}")
         if confirm:
             # Call the handle_submit function from data_controller
             handle_submit(caseid_pattern, records_per_batch)

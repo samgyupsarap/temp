@@ -21,7 +21,7 @@ def create_folder_if_not_exists(parent_folder, folder_name):
     return batch_folder_path
 
 def save_data_to_file(folder_path, caseid_pattern, batch_no, case_ids):
-    """Save case IDs to a text file."""
+    """Save GeoIDs IDs to a text file."""
     txt_file_name = f"{caseid_pattern}_Batch_{batch_no}.txt"
     txt_file_path = os.path.join(folder_path, txt_file_name)
 
@@ -36,7 +36,7 @@ def save_data_to_file(folder_path, caseid_pattern, batch_no, case_ids):
             path_file.write(f"{os.path.abspath(txt_file_path)}")
 
     except Exception as e:
-        print(f"Error saving case IDs to file: {e}")
+        print(f"Error saving GeoIDs to file: {e}")
 
 def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
     """Copy files from CopyFolder to the batch folder and modify extractData.pff if it exists."""
