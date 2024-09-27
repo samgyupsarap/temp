@@ -28,7 +28,7 @@ def get_total_records(caseid_pattern):
         total_records = data.get('count', 0)
         return total_records if isinstance(total_records, int) else total_records.get('count', 0)
     except requests.RequestException as e:
-        messagebox.showerror("API Error", f"Failed to fetch total records: {e}")
+
         return 0
 
 def fetch_all_data(caseid_pattern, max_limit):
