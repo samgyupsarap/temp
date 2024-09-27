@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('controllers', 'controllers'), ('models', 'models'), ('utils', 'utils'), ('views', 'views'), ('src/bg_py_app.png', 'src'), ('CopyFolder', 'CopyFolder')],
+    datas=[('controllers', 'controllers'), ('models', 'models'), ('utils', 'utils'), ('views', 'views'), ('src/bg_py_app.png', 'src'), ('src/logo.ico', 'src'), ('CopyFolder', 'CopyFolder')],
     hiddenimports=['requests', 'customtkinter', 'dotenv', 'Pillow'],
     hookspath=[],
     hooksconfig={},

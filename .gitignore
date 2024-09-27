@@ -3,5 +3,5 @@
 __pycache__/
 *.py[cod]
 *.py312
-.dist/
-.build/
+/dist/
+/build/
