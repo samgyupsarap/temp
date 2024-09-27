@@ -80,11 +80,8 @@ class MainView:
         else:
             records_per_batch = 1000  # Default value
 
-        # Show confirmation dialog
-        confirm = messagebox.askyesno("Confirm Submission", f"Are you sure you want to submit?\nGeoID: {caseid_pattern}\nRecords per Batch: {records_per_batch}")
-        if confirm:
-            # Call the handle_submit function from data_controller
-            handle_submit(caseid_pattern, records_per_batch)
+    
+        handle_submit(caseid_pattern, records_per_batch)
 
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):

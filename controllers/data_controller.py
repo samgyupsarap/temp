@@ -146,6 +146,15 @@ def handle_submit(caseid_pattern, records_per_batch):
     # Calculate the total number of batches
     num_batches = (total_records + records_per_batch - 1) // records_per_batch
 
+    # Check if the number of batches exceeds the limit
+    if num_batches > 30:
+        messagebox.showwarning(
+            "Too Many Batches",
+            f"The number of batches ({num_batches}) exceeds the allowed limit of 30. "
+            "Please increase the number of records per batch and try again."
+        )
+        return  # Stop processing if the number of batches exceeds the limit
+
     # Show a confirmation message with the total number of batches
     confirm_message = f"This operation will generate {num_batches} batches, each with up to {records_per_batch} records.\n\nDo you want to proceed?"
     confirm = messagebox.askyesno("Confirm Batch Generation", confirm_message)
