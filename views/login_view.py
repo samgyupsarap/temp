@@ -15,6 +15,21 @@ class LoginView:
         # Handle window close event
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
+        width, height = 500, 1000
+        margin = 30  # Define margin from the screen edges
+
+        self.root.geometry(f"{width}x{height}")
+        
+        # Calculate position on the right side of the screen with margins
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x = screen_width - width - margin  # Add margin from the right edge
+        y = (screen_height // 2) - (height // 2) - margin  # Add margin from the top/bottom
+        self.root.geometry(f"{width}x{height}+{x}+{y}")
+
+        self.root.resizable(False, False)
+
+
     def setup_ui(self):
         self.root.title("Login")
         self.root.geometry("500x1000")

@@ -11,6 +11,20 @@ class MainView:
         self.root.geometry("500x1000")
         self.root.resizable(False, False)
 
+        width, height = 500, 1000
+        margin = 30  # Define margin from the screen edges
+
+        self.root.geometry(f"{width}x{height}")
+        
+        # Calculate position on the right side of the screen with margins
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x = screen_width - width - margin  # Add margin from the right edge
+        y = (screen_height // 2) - (height // 2) - margin  # Add margin from the top/bottom
+        self.root.geometry(f"{width}x{height}+{x}+{y}")
+
+        self.root.resizable(False, False)
+
         # Load and set the background image
         try:
             image_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'bg_py_app.png')

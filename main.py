@@ -3,6 +3,8 @@ from tkinter import messagebox  # Import messagebox for showing dialog boxes
 from controllers.login_controller import LoginController
 from views.login_view import LoginView
 import threading
+import customtkinter as ctk
+ctk.set_appearance_mode("light")
 
 class Application(tk.Tk):
     def __init__(self):
