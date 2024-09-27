@@ -11,7 +11,7 @@ class LoginView:
         self.on_login_success = on_login_success
         self.controller = LoginController(root)  # Initialize the login controller
         self.setup_ui()  # Set up the UI components
-
+  
         # Handle window close event
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -41,6 +41,11 @@ class LoginView:
             self.bg_image = Image.open(image_path)
             self.bg_image = self.bg_image.resize((500, 1000), Image.LANCZOS)
             self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
+
+            icon_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'logo.ico')
+            if os.path.exists(icon_path):
+                self.root.iconbitmap(icon_path)
+
         except FileNotFoundError:
             messagebox.showerror("Error", "Background image not found.")
             self.root.destroy()  # Close the application if the image is not found

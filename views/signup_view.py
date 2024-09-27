@@ -1,36 +1,52 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 import tkinter as tk
+from tkinter import messagebox
 from controllers.signup_controller import SignupController
+import os
 
 class SignupView:
     def __init__(self, root, on_signup_success):
         self.root = root
         self.on_signup_success = on_signup_success
         self.controller = SignupController(on_signup_success)
-        self.root.title("Sign Up")
 
         # Set the window size
-        width, height = 500, 1000
+        self.width, self.height = 500, 1000
         margin = 30  # Define margin from the screen edges
 
-        self.root.geometry(f"{width}x{height}")
-        
         # Calculate position on the right side of the screen with margins
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
-        x = screen_width - width - margin  # Add margin from the right edge
-        y = (screen_height // 2) - (height // 2) - margin  # Add margin from the top/bottom
-        self.root.geometry(f"{width}x{height}+{x}+{y}")
+        x = screen_width - self.width - margin  # Add margin from the right edge
+        y = (screen_height // 2) - (self.height // 2) - margin  # Add margin from the top/bottom
+        self.root.geometry(f"{self.width}x{self.height}+{x}+{y}")
 
+        self.root.title("Sign Up")
         self.root.resizable(False, False)
+
+        self.setup_ui()
+
+    def setup_ui(self):
         # Load and set the background image
-        self.bg_image = Image.open("./src/bg_py_app.png")  # Path to your image file
-        self.bg_image = self.bg_image.resize((width, height), Image.LANCZOS)
-        self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
+        try:
+            image_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'bg_py_app.png')
+            self.bg_image = Image.open(image_path)
+            self.bg_image = self.bg_image.resize((self.width, self.height), Image.LANCZOS)
+            self.bg_image_tk = ImageTk.PhotoImage(self.bg_image)
+
+            icon_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'logo.ico')
+            if os.path.exists(icon_path):
+                self.root.iconbitmap(icon_path)
+            else:
+                messagebox.showwarning("Warning", "Icon file not found.")
+
+        except FileNotFoundError:
+            messagebox.showerror("Error", "Background image not found.")
+            self.root.destroy()  # Close the application if the image is not found
 
         # Create canvas for the background image
-        self.canvas = ctk.CTkCanvas(self.root, width=width, height=height, highlightthickness=0)
+        self.canvas = ctk.CTkCanvas(self.root, width=self.width, height=self.height, highlightthickness=0)
         self.canvas.pack(fill='both', expand=True)
         self.canvas.create_image(0, 0, anchor='nw', image=self.bg_image_tk)
 
