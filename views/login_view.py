@@ -78,7 +78,7 @@ class LoginView:
             self.password_entry.delete(0, 'end')
             self.on_login_success(username, password)  # Call success callback
         else:
-            messagebox.showerror("Login Failed", "Invalid username or password.")
+            return
 
     def open_signup(self):
         self.root.withdraw()  # Hide the login window

@@ -81,7 +81,7 @@ class MainView:
             records_per_batch = 1000  # Default value
 
         # Show confirmation dialog
-        confirm = messagebox.askyesno("Confirm Submission", f"Are you sure you want to submit?\GeoID: {caseid_pattern}\nRecords per Batch: {records_per_batch}")
+        confirm = messagebox.askyesno("Confirm Submission", f"Are you sure you want to submit?\nGeoID: {caseid_pattern}\nRecords per Batch: {records_per_batch}")
         if confirm:
             # Call the handle_submit function from data_controller
             handle_submit(caseid_pattern, records_per_batch)
