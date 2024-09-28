@@ -46,7 +46,7 @@ def login(username, password):
         return token
 
     except requests.RequestException as e:
-        raise RuntimeError(f"Failed to log in: {e}")
+        raise RuntimeError(f"Failed to log in")
     except ValueError as ve:
         raise RuntimeError(str(ve))
 
@@ -72,4 +72,4 @@ def signup(username, password):
             print(f"Error response content: {e.response.content.decode()}")
         else:
             print("No response content available.")
-        raise RuntimeError(f"Failed to sign up: {e}")
+        raise RuntimeError(f"Failed to sign up")

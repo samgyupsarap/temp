@@ -28,7 +28,7 @@ def get_total_records(caseid_pattern):
         total_records = data.get('count', 0)
         return total_records if isinstance(total_records, int) else total_records.get('count', 0)
     except requests.RequestException as e:
-        messagebox.showerror("API Error", f"Failed to fetch total records: {e}")
+        messagebox.showerror("API Error", f"Failed to fetch total records")
         return 0
 
 def fetch_all_data(caseid_pattern, max_limit):
@@ -51,7 +51,7 @@ def fetch_all_data(caseid_pattern, max_limit):
 
         return caseids  # Return only caseid list
     except requests.RequestException as e:
-        messagebox.showerror("API Error", f"Failed to fetch data: {e}")
+        messagebox.showerror("API Error", f"Failed to fetch data")
         return None
 
 def process_batches(parent_folder_path, caseid_pattern, records_per_batch, progress_label, progress_bar, progress_window):
