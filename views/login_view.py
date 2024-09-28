@@ -11,7 +11,7 @@ class LoginView:
         self.on_login_success = on_login_success
         self.controller = LoginController(root)  # Initialize the login controller
         self.setup_ui()  # Set up the UI components
-  
+
         # Handle window close event
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -59,7 +59,7 @@ class LoginView:
 
         self.username_entry = ctk.CTkEntry(
             self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
-            placeholder_text="Enter username", fg_color="white", 
+            placeholder_text="Username", fg_color="white", 
             text_color="black", placeholder_text_color="#4d4949"
         )
         self.canvas.create_window(250, 400, window=self.username_entry)

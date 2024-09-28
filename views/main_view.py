@@ -54,6 +54,7 @@ class MainView:
         # CaseID entry with white background
         self.caseid_entry = ctk.CTkEntry(
             self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
+            placeholder_text="Ex. 06030",
             fg_color="white", text_color="black"
         )
         self.canvas.create_window(250, 380, window=self.caseid_entry)
@@ -64,7 +65,7 @@ class MainView:
         # Number of Records entry with white background
         self.records_entry = ctk.CTkEntry(
             self.canvas, font=("Helvetica", 18), width=self.entry_width, height=60,
-            placeholder_text="Default: 1000", fg_color="white", text_color="black",
+            placeholder_text="Default: 100000", fg_color="white", text_color="black",
             placeholder_text_color="#4d4949"
         )
         self.canvas.create_window(250, 500, window=self.records_entry)
@@ -97,7 +98,7 @@ class MainView:
                 messagebox.showerror("Input Error", "Please enter a valid number for records per batch.")
                 return
         else:
-            records_per_batch = 1000  # Default value
+            records_per_batch = 100000  # Default value
 
     
         handle_submit(caseid_pattern, records_per_batch)

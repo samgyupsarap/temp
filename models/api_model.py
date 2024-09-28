@@ -46,7 +46,11 @@ def login(username, password):
         return token
 
     except requests.RequestException as e:
+<<<<<<< HEAD
         raise RuntimeError(f"Failed to log in")
+=======
+        raise RuntimeError(f"Enter Correct Username and Password")
+>>>>>>> 1dfa2a46a2a058e6e268ce24682018c1b2045ab1
     except ValueError as ve:
         raise RuntimeError(str(ve))
 
