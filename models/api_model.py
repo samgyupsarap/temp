@@ -4,24 +4,20 @@ from dotenv import load_dotenv
 from .token_model import TokenStorage
 import sys 
 
-
 # Determine the base path for the .env file
 if getattr(sys, 'frozen', False):
-    # If running as a bundled executable, use the executable's directory
-    base_path = sys._MEIPASS  # This is the temporary folder where PyInstaller unpacks files
+    base_path = sys._MEIPASS  # For bundled executable
 else:
-    # Otherwise, use the current file's directory
     base_path = os.path.dirname(__file__)
 
 # Load environment variables from the .env file
 load_dotenv(os.path.join(base_path, '.env'))
 
 # Retrieve API URLs from environment variables
-API_URL = "http://192.168.23.20:3001/popcen"
-LOGIN_URL = "http://192.168.23.20:3001/user/login"
-API_COUNT_URL = "http://192.168.23.20:3001/popcenCount"
-SIGNUP_URL = "http://192.168.23.20:3001/user/register" # Moved here for better visibility
-
+API_URL = os.getenv("API_URL")
+LOGIN_URL = os.getenv("LOGIN_URL")
+API_COUNT_URL = os.getenv("API_COUNT_URL")
+SIGNUP_URL = os.getenv("SIGNUP_URL")
 
 # Ensure required environment variables are defined
 if not API_URL:
