@@ -39,7 +39,7 @@ def save_data_to_file(folder_path, caseid_pattern, batch_no, case_ids):
         print(f"Error saving GeoIDs to file: {e}")
 
 def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
-    """Copy files from CopyFolder to the batch folder and modify extractData.pff if it exists."""
+    """Copy files from CopyFolder to the batch folder and modify download.pff if it exists."""
     copy_folder = os.path.join(os.path.dirname(__file__), '..', 'CopyFolder')
 
     if not os.path.exists(copy_folder):
@@ -56,10 +56,10 @@ def copy_from_copyfolder(batch_folder_path, caseid_pattern, batch_no):
         else:
             shutil.copy2(s, d)
 
-    # Check if extractData.pff exists and update it
-    pff_file_path = os.path.join(batch_folder_path, "extractData.pff")
+    # Check if download.pff exists and update it
+    pff_file_path = os.path.join(batch_folder_path, "download.pff")
     if os.path.exists(pff_file_path):
-        update_extract_data(pff_file_path, caseid_pattern, batch_no)
+        update_download_data(pff_file_path, caseid_pattern, batch_no)
 
     # Optionally, open the .pff file after completing the batch
     autorun_pff(pff_file_path)
@@ -112,12 +112,12 @@ def fetch_batches(main_batch_folder, caseid_pattern, all_caseids, records_per_ba
     progress_window.after(2000, progress_window.destroy)
 
     # After all batches are processed, open the .pff file from the first batch
-    pff_file_path = os.path.join(main_batch_folder, f"{caseid_pattern}_Batch_1", "extractData.pff")
+    pff_file_path = os.path.join(main_batch_folder, f"{caseid_pattern}_Batch_1", "download.pff")
     if os.path.exists(pff_file_path):
         autorun_pff(pff_file_path)
 
-def update_extract_data(pff_file_path, caseid_pattern, batch_no):
-    """Update extractData.pff to include the complete path for INPUT_FILE."""
+def update_download_data(pff_file_path, caseid_pattern, batch_no):
+    """Update download.pff to include the complete path for INPUT_FILE."""
     txt_file_name = f"{caseid_pattern}_Batch_{batch_no}.txt"
     input_file_path = os.path.abspath(os.path.join(os.path.dirname(pff_file_path), txt_file_name))
 
@@ -133,7 +133,7 @@ def update_extract_data(pff_file_path, caseid_pattern, batch_no):
                 file.write(line)
 
     except Exception as e:
-        print(f"Error updating extractData.pff: {e}")
+        print(f"Error updating download.pff: {e}")
 
 def autorun_pff(pff_file_path):
     """Open the .pff file with the default associated application."""

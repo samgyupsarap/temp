@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from .token_model import TokenStorage
 import sys 
 
+
 # Determine the base path for the .env file
 if getattr(sys, 'frozen', False):
     # If running as a bundled executable, use the executable's directory
