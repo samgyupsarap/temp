@@ -148,8 +148,14 @@ class SignupView:
         result = self.controller.signup_user(username, password)
 
         if result is True:
+            # Notify the user of successful signup
             self.show_custom_message("Signup Success", "You have successfully signed up!")
+
+            # Generate a .txt file after successful signup
+            with open("signup.txt", "w") as f:
+                f.write(f"User: {username} signed up successfully.\n")
+
             self.root.destroy()
-            self.on_signup_success()
+            self.on_signup_success()  # Notify the login view to update its state
         else:
             self.show_custom_message("Signup Failed", result)

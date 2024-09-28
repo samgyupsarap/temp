@@ -9,7 +9,11 @@ class LoginView:
     def __init__(self, root, on_login_success):
         self.root = root
         self.on_login_success = on_login_success
-        self.controller = LoginController(root)  # Initialize the login controller
+        self.controller = LoginController(root)
+        
+        # Check if user is already signed up
+        self.user_signed_up = self.check_user_signup_status()
+        
         self.setup_ui()  # Set up the UI components
 
         # Handle window close event
@@ -19,7 +23,7 @@ class LoginView:
         margin = 30  # Define margin from the screen edges
 
         self.root.geometry(f"{width}x{height}")
-        
+
         # Calculate position on the right side of the screen with margins
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
@@ -29,6 +33,9 @@ class LoginView:
 
         self.root.resizable(False, False)
 
+    def check_user_signup_status(self):
+        signup_file = './signup.txt'  # Update this to your actual signup file path
+        return os.path.exists(signup_file)
 
     def setup_ui(self):
         self.root.title("Login")
@@ -79,13 +86,20 @@ class LoginView:
         )
         self.canvas.create_window(250, 545, window=self.login_button)
 
-        self.signup_button = ctk.CTkButton(
-            self.canvas, text="Sign Up", command=self.open_signup,
-            height=70, font=("Helvetica", 20, "bold"),
-            width=self.entry_width, fg_color="#0e8a10",
-            hover_color="#448ec2", text_color="white"
-        )
-        self.canvas.create_window(250, 630, window=self.signup_button)
+        # Conditionally show the signup button
+        self.signup_button = None  # Initialize signup_button as None
+        self.create_signup_button()  # Method to create the signup button
+
+    def create_signup_button(self):
+        """Create the signup button if the signup.txt file is not present."""
+        if not self.user_signed_up:  # Check if the signup file does not exist
+            self.signup_button = ctk.CTkButton(
+                self.canvas, text="Sign Up", command=self.open_signup,
+                height=70, font=("Helvetica", 20, "bold"),
+                width=self.entry_width, fg_color="#0e8a10",
+                hover_color="#448ec2", text_color="white"
+            )
+            self.canvas.create_window(250, 630, window=self.signup_button)
 
     def handle_login(self):
         username = self.username_entry.get()  # Get the username from the entry
@@ -97,23 +111,42 @@ class LoginView:
             self.username_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
             self.on_login_success(username, password)  # Call success callback
-        else:
-            return
 
     def open_signup(self):
         self.root.withdraw()  # Hide the login window
         signup_window = ctk.CTkToplevel(self.root)  # Create a new top-level window
-        SignupView(signup_window, self.on_signup_success)  # Pass the login success callback
+        SignupView(signup_window, self.on_signup_success)  # Pass the signup success callback
 
     def on_signup_success(self):
-        # When signup is successful, show the login window again
-        self.root.deiconify()  # Show the login window again
+        # When signup is successful, update the state
+        self.user_signed_up = True  # Update the state
+        self.hide_signup_button()  # Call the method to hide the signup button
+
+        # Delay showing the login window by 1000 milliseconds (1 second)
+        self.root.after(1000, self.refresh_login_window)  # Call refresh_login_window after delay
+
+    def hide_signup_button(self):
+        """Hide the signup button if it exists."""
+        if self.signup_button:
+            self.signup_button.pack_forget()  # This line hides the signup button
+            self.signup_button = None  # Clear the reference to the button
+
+    def refresh_login_window(self):
+        # Refresh the user signup status
+        self.user_signed_up = self.check_user_signup_status()
+
+        # Clear the entries and refresh the UI
+        self.username_entry.delete(0, 'end')
+        self.password_entry.delete(0, 'end')
+
+        # Remove the signup button if the user is signed up
+        if self.user_signed_up and self.signup_button:
+            self.signup_button.pack_forget()  # Hide the signup button if user is signed up
+            self.signup_button = None  # Clear the reference to the button
+
+        # Show the login window again
+        self.root.deiconify()
 
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             self.root.destroy()  # Safely destroy the app
-
-if __name__ == "__main__":
-    root = ctk.CTk()
-    app = LoginView(root, lambda u, p: print(f"Logged in with {u} and {p}"))
-    root.mainloop()
