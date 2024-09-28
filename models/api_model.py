@@ -4,14 +4,8 @@ from dotenv import load_dotenv
 from .token_model import TokenStorage
 import sys 
 
-# Determine the base path for the .env file
-if getattr(sys, 'frozen', False):
-    base_path = sys._MEIPASS  # For bundled executable
-else:
-    base_path = os.path.dirname(__file__)
-
 # Load environment variables from the .env file
-load_dotenv(os.path.join(base_path, '.env'))
+load_dotenv()
 
 # Retrieve API URLs from environment variables
 API_URL = os.getenv("API_URL")
