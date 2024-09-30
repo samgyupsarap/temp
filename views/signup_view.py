@@ -145,11 +145,13 @@ class SignupView:
             self.show_custom_message("Signup Failed", "Passwords do not match!")
             return
 
-        result = self.controller.signup_user(username, password)
+        # Replace with your actual signup logic
+        if self.controller.signup_user(username, password):  # Assuming this returns True on success
+            # Create an indicator file after successful signup
+            with open("success.txt", "w") as f:  # Create an indicator file
+                f.write("User signed up successfully.")
 
-        if result is True:
-            self.show_custom_message("Signup Success", "You have successfully signed up!")
-            self.root.destroy()
-            self.on_signup_success()
+            self.on_signup_success()  # Notify success to the LoginView
+            self.root.destroy()  # Close the signup window
         else:
-            self.show_custom_message("Signup Failed", result)
+            self.show_custom_message("Signup Failed", "Signup failed. Please try again.")

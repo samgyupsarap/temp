@@ -19,7 +19,7 @@ class LoginView:
         margin = 30  # Define margin from the screen edges
 
         self.root.geometry(f"{width}x{height}")
-        
+
         # Calculate position on the right side of the screen with margins
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
@@ -29,6 +29,8 @@ class LoginView:
 
         self.root.resizable(False, False)
 
+        # Check for the success.txt file
+        self.check_signup_status()
 
     def setup_ui(self):
         self.root.title("Login")
@@ -87,6 +89,28 @@ class LoginView:
         )
         self.canvas.create_window(250, 630, window=self.signup_button)
 
+    def newui(self):
+        # Create a new UI layout after signup status check
+        self.canvas.delete("all")  # Clear the existing canvas
+        self.canvas.create_image(0, 0, anchor='nw', image=self.bg_image_tk)  # Reset background
+
+        self.canvas.create_text(250, 380, text="Login", font=("Helvetica", 30, "bold"), fill="black")
+        self.canvas.create_window(250, 450, window=self.username_entry)
+        self.canvas.create_window(250, 520, window=self.password_entry)
+        self.canvas.create_window(250, 600, window=self.login_button)
+
+    def check_signup_status(self):
+        print("Checking for success.txt...")
+        current_dir = os.getcwd()  # Get the current working directory
+        print(f"Current Directory: {current_dir}")
+
+        if os.path.exists("success.txt"):
+            print("Success file found. Hiding Sign Up button.")
+            self.signup_button.destroy()  # Destroy the signup button if the file exists
+            self.newui()  # Call newui to update the UI
+        else:
+            print("Success file not found. Sign Up button remains.")
+
     def handle_login(self):
         username = self.username_entry.get()  # Get the username from the entry
         password = self.password_entry.get()  # Get the password from the entry
@@ -108,6 +132,7 @@ class LoginView:
     def on_signup_success(self):
         # When signup is successful, show the login window again
         self.root.deiconify()  # Show the login window again
+        self.check_signup_status()
 
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
